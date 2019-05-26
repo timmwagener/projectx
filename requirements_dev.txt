@@ -1,0 +1,6 @@
+tox
+pytest
+pytest-qt
+pytest-mock
+pytest-cov
+Sphinx

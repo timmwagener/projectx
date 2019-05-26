@@ -7,3 +7,11 @@ AttributeException.
 
 class ProjectXException(Exception):
     """Base exception for projectx."""
+
+
+class AmbiguityException(ProjectXException):
+    """AmbiguityException"""
+
+
+class NotFoundException(ProjectXException):
+    """NotFoundException"""

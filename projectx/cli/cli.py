@@ -6,6 +6,7 @@ import click
 # There can be no explicit relative imports in modules that are used directly
 # as PyInstaller entrypoint scripts (or as scripts in general).
 # (Package internal explicit relative imports are fine though).
+from . import core
 from . import gui
 from .utilities import version_option
 from .utilities import config_option
@@ -27,6 +28,7 @@ def cli():
     """
 
 
+cli.add_source(core.cli)
 cli.add_source(gui.cli)
 
 

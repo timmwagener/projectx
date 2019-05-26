@@ -3,9 +3,9 @@
 import logging
 import sys
 
-from PySide2.QtWidgets import QApplication
-
 import qdarkstyle
+
+from projectx.ui.core.application import ProjectXApplication
 
 from .loggers import extend_logging
 
@@ -29,7 +29,7 @@ class ApplicationGuiContext:
         extend_logging()
 
         # application
-        self.application = QApplication()
+        self.application = ProjectXApplication()
 
         # set dark style
         stylesheet = qdarkstyle.load_stylesheet()

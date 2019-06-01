@@ -22,7 +22,8 @@ pipelines:
             image: python:3.7
             name: unittests_ui
             script:
-              - export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
+              - apt-get update
+              - apt-get install -y libgl1-mesa-dev
               - python --version
               - pip install tox
               - tox -e unittests_ui

@@ -39,9 +39,14 @@ pipelines:
 
         - step:
 #            image: iamjohnnym/bionic-python:3.7
-            image: matthewfeickert/docker-python3-ubuntu
+            image: ubuntu:latest
             name: systemtests_ui
             script:
+              - pyenv versions
+              - pyenv install -l | grep 3.7
+              - pyenv install 3.7.3
+              - pyenv global 3.7.3
+              - pyenv versions
 #              - https://github.com/ContinuumIO/docker-images/issues/49
 #              - apt-get update -y
 #              - apt install -y libgl1-mesa-glx

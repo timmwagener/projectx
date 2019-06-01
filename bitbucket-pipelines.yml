@@ -39,7 +39,7 @@ pipelines:
 
         - step:
 #            image: iamjohnnym/bionic-python:3.7
-            image: ubuntu:latest
+            image: python:3.7
             name: systemtests_ui
             script:
               - apt-get install -y curl wget

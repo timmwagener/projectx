@@ -38,7 +38,7 @@ pipelines:
               - tox -e systemtests_core
 
         - step:
-            image: python:3.7
+            image: iamjohnnym/bionic-python:3.7
             name: systemtests_ui
             script:
               - python --version

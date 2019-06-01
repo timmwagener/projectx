@@ -24,6 +24,7 @@ pipelines:
             script:
               - apt-get update
 #              - https://github.com/ContinuumIO/docker-images/issues/49
+              - apt-get update
               - apt install -y libgl1-mesa-glx
               - python --version
               - pip install tox
@@ -41,6 +42,9 @@ pipelines:
             image: iamjohnnym/bionic-python:3.7
             name: systemtests_ui
             script:
+#              - https://github.com/ContinuumIO/docker-images/issues/49
+              - apt-get update
+              - apt install -y libgl1-mesa-glx
               - python --version
               - pip install tox
               - tox -e systemtests_ui

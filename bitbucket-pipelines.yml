@@ -38,13 +38,14 @@ pipelines:
               - tox -e systemtests_core
 
         - step:
-            image: iamjohnnym/bionic-python:3.7
+#            image: iamjohnnym/bionic-python:3.7
+            image: matthewfeickert/docker-python3-ubuntu
             name: systemtests_ui
             script:
 #              - https://github.com/ContinuumIO/docker-images/issues/49
               - apt-get update -y
 #              - apt install -y libgl1-mesa-glx
-              - apt-get install -y python3-pyside2
+#              - apt-get install -y python3-pyside2
               - python --version
               - pip install tox
               - tox -e systemtests_ui

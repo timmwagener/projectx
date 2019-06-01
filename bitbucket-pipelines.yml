@@ -26,7 +26,7 @@ pipelines:
 #              - https://github.com/ContinuumIO/docker-images/issues/49
               - apt-get update -y
 #              - apt install -y libgl1-mesa-glx
-              - apt-get install -y libgl1-mesa-glx:i386
+              - apt-get install -y libgl1-mesa-dri
               - python --version
               - pip install tox
               - tox -e unittests_ui

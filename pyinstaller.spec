@@ -3,8 +3,10 @@
 import logging
 import os
 from pathlib import Path
+from importlib.resources import path as resource_path
 
 import projectx
+from projectx.data.images import icons
 from projectx.cli import gui as entrypoint
 
 
@@ -19,6 +21,8 @@ logger.info("Running build for projectx")
 ENTRYPOINT = Path(entrypoint.__file__).as_posix()  # script run by PyInstaller
 APPLICATION_NAME = f"{projectx.__application__}"
 APPLICATION_VERSION = f"{projectx.__version__}"
+with resource_path(icons, "application.ico") as _path:
+    APPLICATION_ICON = _path.as_posix()
 COLLECT_NAME = f"{APPLICATION_NAME}-{APPLICATION_VERSION}"
 
 
@@ -33,6 +37,7 @@ PYINSTALLER_HOOKS = Path(os.environ["PYINSTALLER_HOOKS"]).as_posix()
 logger.info("")
 logger.info(f"APPLICATION_NAME: {APPLICATION_NAME}")
 logger.info(f"APPLICATION_VERSION: {APPLICATION_VERSION}")
+logger.info(f"APPLICATION_ICON: {APPLICATION_ICON}")
 logger.info(f"COLLECT_NAME: {COLLECT_NAME}")
 logger.info(f"ENTRYPOINT: {ENTRYPOINT}")
 
@@ -81,7 +86,7 @@ exe = EXE(
     strip=None,
     upx=True,
     console=EXE_CONSOLE,
-    # icon=f"icons/{projectx.__application__}.ico"
+    icon=APPLICATION_ICON,
 )
 
 

@@ -1,0 +1,82 @@
+# CI pipeline for projectx
+
+clone:
+  depth: full
+
+pipelines:
+  pull-requests:
+
+    # this runs as default for any push to a PR
+    '**':
+      - parallel:
+
+        - step:
+            image: python:3.7
+            name: unittests_core
+            script:
+              - python --version
+              - pip install tox
+              - tox -e unittests_core
+
+        - step:
+            image: python:3.7
+            name: unittests_ui
+            script:
+              - python --version
+              - pip install tox
+              - tox -e unittests_ui
+
+        - step:
+            image: python:3.7
+            name: systemtests_core
+            script:
+              - python --version
+              - pip install tox
+              - tox -e systemtests_core
+
+        - step:
+            image: python:3.7
+            name: systemtests_ui
+            script:
+              - python --version
+              - pip install tox
+              - tox -e systemtests_ui
+
+      - parallel:
+
+        - step:
+            image: python:3.7
+            name: flake8
+            script:
+              - python --version
+              - pip install tox
+              - tox -e flake8
+
+        - step:
+            image: python:3.7
+            name: pylint
+            script:
+              - python --version
+              - pip install tox
+              - tox -e pylint
+
+        - step:
+            image: python:3.7
+            name: docs
+            script:
+              - python --version
+              - pip install tox
+              - tox -e apidocs
+              - tox -e docs
+            artifacts:
+              - docs/build/html/**
+
+        - step:
+            image: python:3.7
+            name: exe
+            script:
+              - python --version
+              - pip install tox
+              - tox -e exe
+            artifacts:
+              - dist/**

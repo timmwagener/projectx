@@ -24,8 +24,7 @@ pipelines:
             script:
               - apt-get update
 #              - https://github.com/ContinuumIO/docker-images/issues/49
-#              - apt install -y libgl1-mesa-glx
-              - apt install -y libgl1-mesa-swx11
+              - apt install libgl1-mesa-glx
               - python --version
               - pip install tox
               - tox -e unittests_ui
@@ -39,7 +38,7 @@ pipelines:
               - tox -e systemtests_core
 
         - step:
-            image: python:3.7
+            image: python:3.7-windowsservercore
             name: systemtests_ui
             script:
               - python --version

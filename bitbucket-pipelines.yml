@@ -25,8 +25,7 @@ pipelines:
               - apt-get update
 #              - https://github.com/ContinuumIO/docker-images/issues/49
               - apt-get update -y
-#              - apt install -y libgl1-mesa-glx
-              - apt-get install -y libgl1-mesa-dri
+#             - apt-get install -y libgl1-mesa-glx
               - python --version
               - pip install tox
               - tox -e unittests_ui
@@ -46,8 +45,7 @@ pipelines:
 #              - https://github.com/ContinuumIO/docker-images/issues/49
               - apt-get update -y
 #              - apt install -y libgl1-mesa-glx
-              - apt-get install -y libgl1-mesa-dri
-              - apt-get install -y libgl1-mesa-glx
+              - apt-get install -y python-pyside2
               - python --version
               - pip install tox
               - tox -e systemtests_ui

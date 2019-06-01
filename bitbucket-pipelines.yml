@@ -22,10 +22,9 @@ pipelines:
             image: python:3.7
             name: unittests_ui
             script:
-              - apt-get update
 #              - https://github.com/ContinuumIO/docker-images/issues/49
               - apt-get update -y
-#             - apt-get install -y libgl1-mesa-glx
+              - apt-get install -y libgl1-mesa-glx
               - python --version
               - pip install tox
               - tox -e unittests_ui

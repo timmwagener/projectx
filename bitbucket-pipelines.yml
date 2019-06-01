@@ -42,6 +42,7 @@ pipelines:
             image: ubuntu:latest
             name: systemtests_ui
             script:
+              - apt-get install -y curl wget
               - curl https://pyenv.run | bash
               - pyenv update
               - pyenv versions

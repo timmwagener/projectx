@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
 import logging
+import webbrowser
 
-from PySide2.QtWidgets import QLabel
+from PySide2.QtWidgets import QPushButton
 
 import click
 
+from projectx.core.configuration.settings import DOCS_HTML_INDEX
 from projectx.core.configuration.startup import ApplicationCoreContext
 from projectx.ui.configuration.startup import ApplicationGuiContext
 
@@ -17,6 +19,10 @@ from projectx.cli.utilities import config_option
 
 
 logger = logging.getLogger(__name__)
+
+
+def open_docs():
+    webbrowser.open(DOCS_HTML_INDEX, 2)
 
 
 @click.group()
@@ -34,9 +40,10 @@ def gui(verbosity, ):
     with ApplicationCoreContext(verbosity):
         with ApplicationGuiContext() as application:
 
-            # label
-            label = QLabel("gui")
-            label.show()
+            # button
+            button = QPushButton("Open docs")
+            button.clicked.connect(open_docs)
+            button.show()
 
 
 if (__name__ == "__main__"):

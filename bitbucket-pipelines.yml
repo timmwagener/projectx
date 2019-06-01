@@ -38,7 +38,7 @@ pipelines:
               - tox -e systemtests_core
 
         - step:
-            image: python:3.7-windowsservercore
+            image: python:3.7-windowsservercore-ltsc2016
             name: systemtests_ui
             script:
               - python --version

@@ -44,6 +44,9 @@ pipelines:
             script:
               - apt-get install -y curl wget
               - curl https://pyenv.run | bash
+              - export PATH="/root/.pyenv/bin:$PATH"
+              - eval "$(pyenv init -)"
+              - eval "$(pyenv virtualenv-init -)"
               - pyenv update
               - pyenv versions
               - pyenv install -l | grep 3.7

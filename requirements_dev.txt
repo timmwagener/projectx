@@ -5,3 +5,4 @@ pytest-qt
 pytest-mock
 pytest-cov
 Sphinx
+sphinx_rtd_theme

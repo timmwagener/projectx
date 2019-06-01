@@ -23,7 +23,7 @@ pipelines:
             name: unittests_ui
             script:
               - apt-get update
-              - apt-get install -y libgl1-mesa-dev
+              - apt-get install -y libgl-dev
               - python --version
               - pip install tox
               - tox -e unittests_ui

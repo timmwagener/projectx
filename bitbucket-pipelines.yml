@@ -57,6 +57,7 @@ pipelines:
 #              - apt-get update -y
 #              - apt install -y libgl1-mesa-glx
 #              - apt-get install -y python3-pyside2
+              - apt-get install -y libgl1-mesa-glx
               - python --version
               - pip install tox
               - tox -e systemtests_ui

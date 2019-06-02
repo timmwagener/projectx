@@ -21,11 +21,11 @@ matrix:
         - TOX_ENV=unittests_ui
 
     - name: "xenial-37-systemtests_core"
-        language: python
-        python: 3.7
-        dist: xenial
-        env:
-          - TOX_ENV=systemtests_core
+      language: python
+      python: 3.7
+      dist: xenial
+      env:
+        - TOX_ENV=systemtests_core
 
     - name: "xenial-37-systemtests_ui"
       language: python
@@ -96,9 +96,17 @@ matrix:
         - PATH=/c/Python37:/c/Python37/Scripts:$PATH
         - TOX_ENV=systemtests_ui
 
-#    allow_failures:
-#      - name: "xenial-37-unittests_ui"
-#      - name: "xenial-37-systemtests_ui"
+    allow_failures:
+
+      - python: 3.7
+        dist: xenial
+        env:
+          - TOX_ENV=unittests_ui
+
+      - python: 3.7
+          dist: xenial
+          env:
+            - TOX_ENV=systemtests_ui
 
 install:
   - pip3 install tox

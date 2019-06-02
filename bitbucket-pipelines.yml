@@ -44,7 +44,7 @@ pipelines:
             name: systemtests_ui
             script:
 #              - apt-get install -y curl wget
-              - yum install curl
+#              - yum install curl
               - curl https://pyenv.run | bash
               - export PATH="/root/.pyenv/bin:$PATH"
               - eval "$(pyenv init -)"

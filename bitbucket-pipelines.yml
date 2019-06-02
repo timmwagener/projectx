@@ -1,4 +1,4 @@
-# CI pipeline for projectx
+# Bitbucket CI pipeline for projectx
 
 clone:
   depth: full
@@ -18,14 +18,12 @@ pipelines:
               - pip install tox
               - tox -e unittests_core
 
+        # TODO: Fix this
+        # See Also: https://github.com/ContinuumIO/docker-images/issues/49
         - step:
             image: python:3.7
             name: unittests_ui
             script:
-#              - https://github.com/ContinuumIO/docker-images/issues/49
-              - apt-get update -y
-              - apt-get install -y libgl1-mesa-dev
-              - apt-get install -y libgl1-mesa-glx
               - python --version
               - pip install tox
               - tox -e unittests_ui
@@ -38,29 +36,12 @@ pipelines:
               - pip install tox
               - tox -e systemtests_core
 
+        # TODO: Fix this
+        # See Also: https://github.com/ContinuumIO/docker-images/issues/49
         - step:
-#            image: iamjohnnym/bionic-python:3.7
-            image: centos/python-35-centos7
+            image: python:3.7
             name: systemtests_ui
             script:
-#              - apt-get install -y curl wget
-#              - yum install curl
-              - curl https://pyenv.run | bash
-              - export PATH="/root/.pyenv/bin:$PATH"
-              - eval "$(pyenv init -)"
-              - eval "$(pyenv virtualenv-init -)"
-              - pyenv update
-              - pyenv versions
-              - pyenv install -l | grep 3.7
-              - pyenv install 3.7.3
-              - pyenv global 3.7.3
-              - pyenv versions
-#              - https://github.com/ContinuumIO/docker-images/issues/49
-#              - apt-get update -y
-#              - apt install -y libgl1-mesa-glx
-#              - apt-get install -y python3-pyside2
-#              - apt-get install -y libgl1-mesa-dev
-#              - apt-get install -y libgl1-mesa-glx
               - python --version
               - pip install tox
               - tox -e systemtests_ui

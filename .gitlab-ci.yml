@@ -2,60 +2,88 @@
 # Register own runners if needed.
 # Currently linux only.
 
-image: python:3.7-stretch
-
-before_script:
-  - python --version
-  - pip --version
-  - pip install tox
-
 stages:
   - test
   - lint
   - document
-  - publish
+#  - publish
   - build
 
 unittests_core:
   stage: test
+  image: python:3.7-stretch
   coverage: '/^TOTAL.*\s+(\d+\%)$/'
+  before_script:
+    - python --version
+    - pip --version
+    - pip install tox
   script:
     - tox -e unittests_core
 
 unittests_ui:
   stage: test
+  image: python:3.7-stretch
   coverage: '/^TOTAL.*\s+(\d+\%)$/'
   allow_failure: true  # because of problem with linux and pyside2
+  before_script:
+    - python --version
+    - pip --version
+    - pip install tox
   script:
     - tox -e unittests_ui
 
 systemtests_core:
   stage: test
+  image: python:3.7-stretch
   coverage: '/^TOTAL.*\s+(\d+\%)$/'
+  before_script:
+    - python --version
+    - pip --version
+    - pip install tox
   script:
     - tox -e systemtests_core
 
 systemtests_ui:
   stage: test
+  image: python:3.7-stretch
   coverage: '/^TOTAL.*\s+(\d+\%)$/'
   allow_failure: true  # because of problem with linux and pyside2
+  before_script:
+    - python --version
+    - pip --version
+    - pip install tox
   script:
     - tox -e systemtests_ui
 
 flake8:
   stage: lint
+  image: python:3.7-stretch
   allow_failure: true
+  before_script:
+    - python --version
+    - pip --version
+    - pip install tox
   script:
     - tox -e flake8
 
 pylint:
   stage: lint
+  image: python:3.7-stretch
   allow_failure: true
+  before_script:
+    - python --version
+    - pip --version
+    - pip install tox
   script:
     - tox -e pylint
 
 docs:
   stage: document
+  image: python:3.7-stretch
+  before_script:
+    - python --version
+    - pip --version
+    - pip install tox
   script:
     - tox -e apidocs
     - tox -e docs
@@ -64,24 +92,29 @@ docs:
       - docs/build/html/
     expire_in: 1 week
 
-pages:
-  stage: publish
-  before_script:  # overwrite global settings for efficiency
-    - echo "noop"
-  dependencies:  # download artifacts of these jobs
-    - docs
-  script:
-    - mv docs/build/html/ public/
-  artifacts:
-    paths:
-      - public
-  only:
-    - develop
+#pages:
+#  stage: publish
+#  before_script:  # overwrite global settings for efficiency
+#    - echo "noop"
+#  dependencies:  # download artifacts of these jobs
+#    - docs
+#  script:
+#    - mv docs/build/html/ public/
+#  artifacts:
+#    paths:
+#      - public
+#  only:
+#    - develop
 
 # exe doesn't apply for linux
 exe:
   stage: build
+  image: python:3.7-stretch
   allow_failure: true  # because of problem with linux and pyside2
+  before_script:
+    - python --version
+    - pip --version
+    - pip install tox
   script:
     - tox -e exe
   artifacts:

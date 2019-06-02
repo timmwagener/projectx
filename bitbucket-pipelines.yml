@@ -40,10 +40,11 @@ pipelines:
 
         - step:
 #            image: iamjohnnym/bionic-python:3.7
-            image: python:3.7
+            image: centos/python-35-centos7
             name: systemtests_ui
             script:
-              - apt-get install -y curl wget
+#              - apt-get install -y curl wget
+              - yum install curl
               - curl https://pyenv.run | bash
               - export PATH="/root/.pyenv/bin:$PATH"
               - eval "$(pyenv init -)"
@@ -58,8 +59,8 @@ pipelines:
 #              - apt-get update -y
 #              - apt install -y libgl1-mesa-glx
 #              - apt-get install -y python3-pyside2
-              - apt-get install -y libgl1-mesa-dev
-              - apt-get install -y libgl1-mesa-glx
+#              - apt-get install -y libgl1-mesa-dev
+#              - apt-get install -y libgl1-mesa-glx
               - python --version
               - pip install tox
               - tox -e systemtests_ui

@@ -79,7 +79,7 @@
 jobs:
 
 
-- job: 'test-ubuntu-16.04'
+- job: 'test_ubuntu_16_04'
   pool:
     vmImage: 'ubuntu-16.04'
   strategy:
@@ -111,7 +111,7 @@ jobs:
     displayName: 'Run systemtests_ui'
 
 
-- job: 'test-macOS-10.13'
+- job: 'test_macOS_10_13'
   pool:
     vmImage: 'macOS-10.13'
   strategy:
@@ -143,7 +143,7 @@ jobs:
     displayName: 'Run systemtests_ui'
 
 
-- job: 'test-vs2017-win2016'
+- job: 'test_vs2017_win2016'
   pool:
     vmImage: 'vs2017-win2016'
   strategy:

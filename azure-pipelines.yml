@@ -156,3 +156,32 @@ stages:
 
       - script: tox -e pylint
         displayName: 'Run pylint'
+
+
+- stage: build
+  displayName: Building
+  dependsOn: [test, ]
+
+  jobs:
+
+  - job: 'build_vs2017_win2016'
+    pool:
+      vmImage: 'vs2017-win2016'
+    strategy:
+      matrix:
+        Python37:
+          python.version: '3.7'
+      maxParallel: 3
+
+    steps:
+    - task: UsePythonVersion@0
+      displayName: 'Use Python $(python.version)'
+      inputs:
+        versionSpec: '$(python.version)'
+        architecture: 'x64'
+
+    - script: pip install tox
+      displayName: 'Install tox'
+
+    - script: tox -e exe
+      displayName: 'Run exe'

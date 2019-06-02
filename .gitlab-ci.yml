@@ -1,4 +1,6 @@
 # .gitlab-ci.yml
+# Register own runners if needed.
+# Currently linux only.
 
 image: python:3.7-stretch
 
@@ -7,14 +9,12 @@ before_script:
   - pip --version
   - pip install tox
 
-
 stages:
   - test
   - lint
   - document
   - publish
-#  - build
-
+  - build
 
 unittests_core:
   stage: test
@@ -24,54 +24,38 @@ unittests_core:
 
 unittests_ui:
   stage: test
-  image: python:3.7-stretch
   coverage: '/^TOTAL.*\s+(\d+\%)$/'
   allow_failure: true  # because of problem with linux and pyside2
   script:
-    - python --version
-    - pip install tox
     - tox -e unittests_ui
 
 systemtests_core:
   stage: test
-  image: python:3.7-stretch
   coverage: '/^TOTAL.*\s+(\d+\%)$/'
   script:
-    - python --version
-    - pip install tox
     - tox -e systemtests_core
 
 systemtests_ui:
   stage: test
-  image: python:3.7-stretch
   coverage: '/^TOTAL.*\s+(\d+\%)$/'
   allow_failure: true  # because of problem with linux and pyside2
   script:
-    - python --version
-    - pip install tox
     - tox -e systemtests_ui
 
 flake8:
   stage: lint
-  image: python:3.7-stretch
   allow_failure: true
   script:
-    - python --version
-    - pip install tox
     - tox -e flake8
 
 pylint:
   stage: lint
-  image: python:3.7-stretch
   allow_failure: true
   script:
-    - python --version
-    - pip install tox
     - tox -e pylint
 
 docs:
   stage: document
-  image: python:3.7-stretch
   script:
     - tox -e apidocs
     - tox -e docs
@@ -94,4 +78,13 @@ pages:
   only:
     - develop
 
-# build exe
+# exe doesn't apply for linux
+exe:
+  stage: build
+  allow_failure: true  # because of problem with linux and pyside2
+  script:
+    - tox -e exe
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 week

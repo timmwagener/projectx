@@ -100,7 +100,7 @@ stages:
 
 windows:unittests_core:
   stage: test
-  image: python:3.7-windowsservercore-ltsc2016
+  image: python:3-windowsservercore
   coverage: '/^TOTAL.*\s+(\d+\%)$/'
   script:
     - python --version

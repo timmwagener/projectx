@@ -1,135 +1,38 @@
 # .gitlab-ci.yml
 
-#image: docker
-#
-#services:
-#  - docker:dind
-#
-#variables:
-#  APP: docker_web_application
-#  IMAGE_DOCKER_WEB_APPLICATION: $CI_REGISTRY_IMAGE/$APP:$CI_COMMIT_SHA
-#  IMAGE_DOCKER_WEB_APPLICATION_NGINX: $CI_REGISTRY_IMAGE/docker_web_application_nginx:$CI_COMMIT_SHA
-#  CONFIG: /server/$APP/$APP/configuration/config.json
-#  DATABASE_ROOT_PASSWORD: f10e2821bbbea527ea02200352313bc059445190
-#  BROKER_ROOT_PASSWORD: f10e2821bbbea527ea02200352313bc059445191
-#  COMPOSE_CONFIG_CI: --file docker-compose.yml --file docker-compose.ci.yml
-#  RUN: run --no-deps --rm $APP
-#
-#before_script:
-#  - apk add --no-cache py-pip
-#  - pip install docker-compose
-#  # gitlab-ci-token is hardcoded user name from gitlab
-#  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+image: python:3.7-stretch
+
+before_script:
+  - python --version
+  - pip --version
+  - pip install tox
+
 
 stages:
-#  - build
   - test
-#  - lint
-#  - coverage
-#  - document
-#  - publish
-#  # - staging tbd
+  - lint
+  - document
+  - publish
+#  - build
 
-#test:windows:
-#  stage: test
-#  image: python:3.7-windowsservercore
-#  dependencies:
-#    - build:windows
-#  before_script:
-#    - SET "PATH=C:\\miniconda3;C:\\miniconda3\\Scripts;%PATH%"
-#    - SET "PATH=C:\\miniconda3\\include;%PATH%"
-#    - SET "PATH=C:\\miniconda3\\python3.7\\site-packages\\numpy\\core\\include;%PATH%"
-#    - SET "PATH=C:\\windows\\system32\\config\\systemprofile\\appdata\\roaming\\python\\python37\\site-packages;%PATH%"
-#    - SET "PATH=C:\\windows\\system32\\config\\systemprofile\\appdata\\roaming\\python\\python37\\site-packages\\numpy\\core\\include;%PATH%"
-#    - pip install virtualenv
-#    - virtualenv venv
-#    - call venv\\Scripts\\activate.bat
-#    - python --version
-#    - pip install pip --upgrade
-#    - pip install setuptools --upgrade
-#    - pip install numpy --upgrade
-#    - pip install PySide2 --upgrade
-#    - pip install -r requirements.txt --upgrade
-#    - SET "CFLAGS=C:\\Windows\\system32\\config\\systemprofile\\AppData\\Roaming\\Python\\Python37\\site-packages\\numpy\\core\\include;%CFLAGS%"
-#    - pip install .
-#  script:
-#    - python info_version.py
-#    - python freeart test
-#
-#
-#build_docker_web_application:
-#  stage: build
-#  script:
-#    - docker-compose build $APP
-#    - docker tag $APP $IMAGE_DOCKER_WEB_APPLICATION
-#    - docker push $IMAGE_DOCKER_WEB_APPLICATION
-#
-#build_docker_web_application_nginx:
-#  stage: build
-#  script:
-#    - docker-compose build nginx
-#    - docker tag docker_web_application_nginx $IMAGE_DOCKER_WEB_APPLICATION_NGINX
-#    - docker push $IMAGE_DOCKER_WEB_APPLICATION_NGINX
-#
-#flake8:
-#  stage: lint
-#  allow_failure: true
-#  before_script:
-#    - apk add --no-cache py-pip
-#    - pip install flake8
-#  script:
-#    - flake8 --benchmark --statistics --exclude __pycache__ $APP tests
-#
-#pylint:
-#  stage: lint
-#  allow_failure: true
-#  before_script:
-#    - apk add --no-cache py-pip
-#    - pip install pylint
-#  script:
-#    - pylint -j 0 --disable=missing-docstring --disable=superfluous-parens --ignore=__pycache__ $APP tests
-#
-#pylint_py3:
-#  stage: lint
-#  allow_failure: true
-#  before_script:
-#    - apk add --no-cache py-pip
-#    - pip install pylint
-#  script:
-#    - pylint --py3k --ignore=__pycache__ $APP tests
 
-windows:unittests_core:
+unittests_core:
   stage: test
-  image: python:3-windowsservercore
   coverage: '/^TOTAL.*\s+(\d+\%)$/'
   script:
-    - python --version
-    - pip install tox
     - tox -e unittests_core
-#  artifacts:
-#    name: "$coverage_${CI_JOB_NAME}_${CI_COMMIT_REF_NAME}_${CI_COMMIT_SHA}"
-#    paths:
-#      - /server/$APP/htmlcov/
 
-linux:unittests_core:
+unittests_ui:
   stage: test
   image: python:3.7-stretch
   coverage: '/^TOTAL.*\s+(\d+\%)$/'
-  script:
-    - python --version
-    - pip install tox
-    - tox -e unittests_core
-
-linux:unittests_ui:
-  stage: test
-  image: python:3.7-stretch
-  coverage: '/^TOTAL.*\s+(\d+\%)$/'
+  allow_failure: true  # because of problem with linux and pyside2
   script:
     - python --version
     - pip install tox
     - tox -e unittests_ui
 
-linux:systemtests_core:
+systemtests_core:
   stage: test
   image: python:3.7-stretch
   coverage: '/^TOTAL.*\s+(\d+\%)$/'
@@ -138,78 +41,57 @@ linux:systemtests_core:
     - pip install tox
     - tox -e systemtests_core
 
-linux:systemtests_ui:
+systemtests_ui:
   stage: test
   image: python:3.7-stretch
   coverage: '/^TOTAL.*\s+(\d+\%)$/'
+  allow_failure: true  # because of problem with linux and pyside2
   script:
     - python --version
     - pip install tox
     - tox -e systemtests_ui
 
-## TODO: Make the config more obvious somehow.
-#integrationtests:
-#  stage: test
-#  coverage: '/^TOTAL.*\s+(\d+\%)$/'
-#  script:
-#    # echo env. variables
-#    - echo $CONFIG
-#    - echo $DATABASE_ROOT_PASSWORD
-#    - echo $BROKER_ROOT_PASSWORD
-#    # pull images
-#    - docker pull $IMAGE_DOCKER_WEB_APPLICATION
-#    - docker pull $IMAGE_DOCKER_WEB_APPLICATION_NGINX
-#    # execute
-#    - docker-compose $COMPOSE_CONFIG_CI config
-#    - docker-compose $COMPOSE_CONFIG_CI up --detach --force-recreate
-#    - docker-compose $COMPOSE_CONFIG_CI $RUN appctl wait_for response http://nginx/ --status-code 200 --timeout 60 --interval 1
-#    - docker-compose $COMPOSE_CONFIG_CI logs
-#    - docker-compose $COMPOSE_CONFIG_CI $RUN pytest /server/$APP/tests/integrationtests -vv -s --log-level INFO --cov=$APP --cov-report=term --cov-report=html
-#  artifacts:
-#    name: "$coverage_${CI_JOB_NAME}_${CI_COMMIT_REF_NAME}_${CI_COMMIT_SHA}"
-#    paths:
-#      - /server/$APP/htmlcov/
-#
-### TODO: Coverage report not yet functional as artifacts are not correctly exported from jobs
-### TODO: Find solution to combine coverage report
-##pages:
-##  stage: coverage
-##  allow_failure: true  # currently fails because of missing coverage reports from tests
-##  dependencies:  # download artifacts of these jobs
-##    - unittests
-###    - integrationtests
-##  script:
-##    - mv coverage_unittests_${CI_COMMIT_REF_NAME}_${CI_COMMIT_SHA}/ public/
-###    - mv coverage_integrationtests_${CI_COMMIT_REF_NAME}_${CI_COMMIT_SHA}/ public/
-##  artifacts:
-##    name: "$coverage_${CI_COMMIT_REF_NAME}_${CI_COMMIT_SHA}"
-##    paths:
-##      - public
-##    expire_in: 30 days
-##  only:
-##    - develop
-#
-#docs:
-#  stage: document
-#  script:
-#    - docker pull $IMAGE_DOCKER_WEB_APPLICATION
-#    - docker-compose $RUN sphinx-build -a -E -b html /server/$APP/docs/source /server/$APP/docs/build/html
-#  artifacts:
-#    paths:
-#      - docs/build/html/
-#    expire_in: 1 week
-#
-#pages:
-#  stage: publish
-#  before_script:
-#    - echo "noop"
-#  dependencies:  # download artifacts of these jobs
-#    - docs
-#  script:
-#    - mv docs/build/html/ public/
-#  artifacts:
-#    paths:
-#      - public
-#  only:
-#    - develop
-#
+flake8:
+  stage: lint
+  image: python:3.7-stretch
+  allow_failure: true
+  script:
+    - python --version
+    - pip install tox
+    - tox -e flake8
+
+pylint:
+  stage: lint
+  image: python:3.7-stretch
+  allow_failure: true
+  script:
+    - python --version
+    - pip install tox
+    - tox -e pylint
+
+docs:
+  stage: document
+  image: python:3.7-stretch
+  script:
+    - tox -e apidocs
+    - tox -e docs
+  artifacts:
+    paths:
+      - docs/build/html/
+    expire_in: 1 week
+
+pages:
+  stage: publish
+  before_script:  # overwrite global settings for efficiency
+    - echo "noop"
+  dependencies:  # download artifacts of these jobs
+    - docs
+  script:
+    - mv docs/build/html/ public/
+  artifacts:
+    paths:
+      - public
+  only:
+    - develop
+
+# build exe

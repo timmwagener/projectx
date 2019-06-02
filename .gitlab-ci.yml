@@ -100,7 +100,7 @@ stages:
 
 windows:unittests_core:
   stage: test
-  image: python:3.7-windowsservercore
+  image: python:3.7-windowsservercore-ltsc2016
   coverage: '/^TOTAL.*\s+(\d+\%)$/'
   script:
     - python --version
@@ -119,6 +119,33 @@ linux:unittests_core:
     - python --version
     - pip install tox
     - tox -e unittests_core
+
+linux:unittests_ui:
+  stage: test
+  image: python:3.7-stretch
+  coverage: '/^TOTAL.*\s+(\d+\%)$/'
+  script:
+    - python --version
+    - pip install tox
+    - tox -e unittests_ui
+
+linux:systemtests_core:
+  stage: test
+  image: python:3.7-stretch
+  coverage: '/^TOTAL.*\s+(\d+\%)$/'
+  script:
+    - python --version
+    - pip install tox
+    - tox -e systemtests_core
+
+linux:systemtests_ui:
+  stage: test
+  image: python:3.7-stretch
+  coverage: '/^TOTAL.*\s+(\d+\%)$/'
+  script:
+    - python --version
+    - pip install tox
+    - tox -e systemtests_ui
 
 ## TODO: Make the config more obvious somehow.
 #integrationtests:

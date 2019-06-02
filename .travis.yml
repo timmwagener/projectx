@@ -1,25 +1,69 @@
-language: python            # this works for Linux but is an error on macOS or Windows
-matrix:
-  include:
-    - name: "Python 3.7.1 on Xenial Linux"
-      python: 3.7           # this works for Linux but is ignored on macOS or Windows.
-      dist: xenial          # required for Python >= 3.7
-    - name: "Python 3.7.2 on macOS"
-      os: osx
-      osx_image: xcode10.2  # Python 3.7.2 running on macOS 10.14.3
-      language: shell       # 'language: python' is an error on Travis CI macOS
-    - name: "Python 3.7.3 on Windows"
-      os: windows           # Windows 10.0.17134 N/A Build 17134
-      language: shell       # 'language: python' is an error on Travis CI Windows
-      before_install: choco install python
-      env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
+
+#language: python
+#
+#matrix:
+#
+#  include:
+#
+#    - name: "xenial-37-unittests_core"
+#      language: python
+#      python: 3.7
+#      dist: xenial
+#
+#    - name: "macOS-37-unittests_core"
+#      language: shell
+#      os: osx
+#      osx_image: xcode10.2
+#
+#    - name: "Python 3.7.3 on Windows"
+#      os: windows           # Windows 10.0.17134 N/A Build 17134
+#      language: shell       # 'language: python' is an error on Travis CI Windows
+#      before_install: choco install python
+#      env: PATH=/c/Python37:/c/Python37/Scripts:$PATH
+#
+#install:
+#  - pip3 install tox
+##  - pip3 install --upgrade pip  # all three OSes agree about 'pip3'
+## 'python' points to Python 2.7 on macOS but points to Python 3.7 on Linux and Windows
+## 'python3' is a 'command not found' error on Windows but 'py' works on Windows only
+#
+#script:
+#  - tox -e unittests_core
+#  - tox -e unittests_ui
+#  - tox -e systemtests_core
+#  - tox -e systemtests_ui
+
+
+
+
+
+language : shell
+
+env:
+  - TOX_ENV=unittets_core
+  - TOX_ENV=unittests_ui
+  - TOX_ENV=systemtests_core
+  - TOX_ENV=systemtests_ui
+
+os:
+  - linux
+  - windows
+  - osx
+
 install:
+  # pip and conda will also need OpenSSL for Windows
+  - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then
+      choco install python;
+      export PATH="/c/Python37:/c/Python37/Scripts:$PATH";
+    fi;
+#  - export PATH="$MINICONDA_PATH:$MINICONDA_SUB_PATH:$PATH";
+  - echo "Running on $TRAVIS_OS_NAME";
   - pip3 install tox
-#  - pip3 install --upgrade pip  # all three OSes agree about 'pip3'
-# 'python' points to Python 2.7 on macOS but points to Python 3.7 on Linux and Windows
-# 'python3' is a 'command not found' error on Windows but 'py' works on Windows only
+
 script:
-  - tox -e unittests_core
-  - tox -e unittests_ui
-  - tox -e systemtests_core
-  - tox -e systemtests_ui
+  - tox -e $TOX_ENV
+#  - conda --version && python --version && pip --version;
+# notifications:
+#    email:
+#        - [your email addres here without brackets and uncomment lines]
+

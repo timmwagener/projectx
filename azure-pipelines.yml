@@ -5,6 +5,13 @@ trigger: none # will disable CI builds (but not PR builds)
 # pull requests to every branch will trigger the CI
 
 
+# TODO: Correct docs zipping
+# TODO: Correct exe zipping
+# TODO: Correctly package docs in exe
+# TODO: Add test coverage reports (PublishTestResults@2|PublishCodeCoverageResults@1)
+#  https://docs.microsoft.com/en-us/azure/devops/pipelines/languages/python?view=azure-devops#publish-test-results
+
+
 stages:
 
 - stage: test
@@ -12,70 +19,70 @@ stages:
 
   jobs:
 
-#  - job: 'test_ubuntu_16_04'
-#    pool:
-#      vmImage: 'ubuntu-16.04'
-#    strategy:
-#      matrix:
-#        Python37:
-#          python.version: '3.7'
-#      maxParallel: 3
-#
-#    steps:
-#    - task: UsePythonVersion@0
-#      displayName: 'Use Python $(python.version)'
-#      inputs:
-#        versionSpec: '$(python.version)'
-#        architecture: 'x64'
-#
-#    - script: pip install tox
-#      displayName: 'Install tox'
-#
-#    - script: tox -e unittests_core
-#      displayName: 'Run unittests_core'
-#
-#    - script: tox -e unittests_ui
-#      displayName: 'Run unittests_ui'
-#      continueOnError: true  # temporarily fails gracefully on issue of linux with pyside2
-#
-#    - script: tox -e systemtests_core
-#      displayName: 'Run systemtests_core'
-#
-#    - script: tox -e systemtests_ui
-#      displayName: 'Run systemtests_ui'
-#      continueOnError: true  # temporarily fails gracefully on issue of linux with pyside2
-#
-#
-#  - job: 'test_macOS_10_13'
-#    pool:
-#      vmImage: 'macOS-10.13'
-#    strategy:
-#      matrix:
-#        Python37:
-#          python.version: '3.7'
-#      maxParallel: 3
-#
-#    steps:
-#    - task: UsePythonVersion@0
-#      displayName: 'Use Python $(python.version)'
-#      inputs:
-#        versionSpec: '$(python.version)'
-#        architecture: 'x64'
-#
-#    - script: pip install tox
-#      displayName: 'Install tox'
-#
-#    - script: tox -e unittests_core
-#      displayName: 'Run unittests_core'
-#
-#    - script: tox -e unittests_ui
-#      displayName: 'Run unittests_ui'
-#
-#    - script: tox -e systemtests_core
-#      displayName: 'Run systemtests_core'
-#
-#    - script: tox -e systemtests_ui
-#      displayName: 'Run systemtests_ui'
+  - job: 'test_ubuntu_16_04'
+    pool:
+      vmImage: 'ubuntu-16.04'
+    strategy:
+      matrix:
+        Python37:
+          python.version: '3.7'
+      maxParallel: 3
+
+    steps:
+    - task: UsePythonVersion@0
+      displayName: 'Use Python $(python.version)'
+      inputs:
+        versionSpec: '$(python.version)'
+        architecture: 'x64'
+
+    - script: pip install tox
+      displayName: 'Install tox'
+
+    - script: tox -e unittests_core
+      displayName: 'Run unittests_core'
+
+    - script: tox -e unittests_ui
+      displayName: 'Run unittests_ui'
+      continueOnError: true  # temporarily fails gracefully on issue of linux with pyside2
+
+    - script: tox -e systemtests_core
+      displayName: 'Run systemtests_core'
+
+    - script: tox -e systemtests_ui
+      displayName: 'Run systemtests_ui'
+      continueOnError: true  # temporarily fails gracefully on issue of linux with pyside2
+
+
+  - job: 'test_macOS_10_13'
+    pool:
+      vmImage: 'macOS-10.13'
+    strategy:
+      matrix:
+        Python37:
+          python.version: '3.7'
+      maxParallel: 3
+
+    steps:
+    - task: UsePythonVersion@0
+      displayName: 'Use Python $(python.version)'
+      inputs:
+        versionSpec: '$(python.version)'
+        architecture: 'x64'
+
+    - script: pip install tox
+      displayName: 'Install tox'
+
+    - script: tox -e unittests_core
+      displayName: 'Run unittests_core'
+
+    - script: tox -e unittests_ui
+      displayName: 'Run unittests_ui'
+
+    - script: tox -e systemtests_core
+      displayName: 'Run systemtests_core'
+
+    - script: tox -e systemtests_ui
+      displayName: 'Run systemtests_ui'
 
 
   - job: 'test_vs2017_win2016'
@@ -100,14 +107,14 @@ stages:
     - script: tox -e unittests_core
       displayName: 'Run unittests_core'
 
-#    - script: tox -e unittests_ui
-#      displayName: 'Run unittests_ui'
-#
-#    - script: tox -e systemtests_core
-#      displayName: 'Run systemtests_core'
-#
-#    - script: tox -e systemtests_ui
-#      displayName: 'Run systemtests_ui'
+    - script: tox -e unittests_ui
+      displayName: 'Run unittests_ui'
+
+    - script: tox -e systemtests_core
+      displayName: 'Run systemtests_core'
+
+    - script: tox -e systemtests_ui
+      displayName: 'Run systemtests_ui'
 
 
 - stage: lint

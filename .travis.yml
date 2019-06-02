@@ -97,11 +97,9 @@ matrix:
         - TOX_ENV=systemtests_ui
 
     allow_failures:
-
       - dist: xenial
         env:
           - TOX_ENV=unittests_ui
-
       - dist: xenial
         env:
           - TOX_ENV=systemtests_ui

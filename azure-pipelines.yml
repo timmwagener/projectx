@@ -1,99 +1,158 @@
 
 
-jobs:
+name: $(Date:yyyyMMdd)$(Rev:.r)
 
 
-- job: 'test_ubuntu_16_04'
-  pool:
-    vmImage: 'ubuntu-16.04'
-  strategy:
-    matrix:
-      Python37:
-        python.version: '3.7'
-    maxParallel: 3
+stages:
 
-  steps:
-  - task: UsePythonVersion@0
-    displayName: 'Use Python $(python.version)'
-    inputs:
-      versionSpec: '$(python.version)'
-      architecture: 'x64'
+- stage: test
+  displayName: Testing
 
-  - script: pip install tox
-    displayName: 'Install tox'
+  jobs:
 
-  - script: tox -e unittests_core
-    displayName: 'Run unittests_core'
+  - job: 'test_ubuntu_16_04'
+    pool:
+      vmImage: 'ubuntu-16.04'
+    strategy:
+      matrix:
+        Python37:
+          python.version: '3.7'
+      maxParallel: 3
 
-  - script: tox -e unittests_ui
-    displayName: 'Run unittests_ui'
+    steps:
+    - task: UsePythonVersion@0
+      displayName: 'Use Python $(python.version)'
+      inputs:
+        versionSpec: '$(python.version)'
+        architecture: 'x64'
 
-  - script: tox -e systemtests_core
-    displayName: 'Run systemtests_core'
+    - script: pip install tox
+      displayName: 'Install tox'
 
-  - script: tox -e systemtests_ui
-    displayName: 'Run systemtests_ui'
+    - script: tox -e unittests_core
+      displayName: 'Run unittests_core'
 
+    - script: tox -e unittests_ui
+      displayName: 'Run unittests_ui'
 
-- job: 'test_macOS_10_13'
-  pool:
-    vmImage: 'macOS-10.13'
-  strategy:
-    matrix:
-      Python37:
-        python.version: '3.7'
-    maxParallel: 3
+    - script: tox -e systemtests_core
+      displayName: 'Run systemtests_core'
 
-  steps:
-  - task: UsePythonVersion@0
-    displayName: 'Use Python $(python.version)'
-    inputs:
-      versionSpec: '$(python.version)'
-      architecture: 'x64'
-
-  - script: pip install tox
-    displayName: 'Install tox'
-
-  - script: tox -e unittests_core
-    displayName: 'Run unittests_core'
-
-  - script: tox -e unittests_ui
-    displayName: 'Run unittests_ui'
-
-  - script: tox -e systemtests_core
-    displayName: 'Run systemtests_core'
-
-  - script: tox -e systemtests_ui
-    displayName: 'Run systemtests_ui'
+    - script: tox -e systemtests_ui
+      displayName: 'Run systemtests_ui'
 
 
-- job: 'test_vs2017_win2016'
-  pool:
-    vmImage: 'vs2017-win2016'
-  strategy:
-    matrix:
-      Python37:
-        python.version: '3.7'
-    maxParallel: 3
+  - job: 'test_macOS_10_13'
+    pool:
+      vmImage: 'macOS-10.13'
+    strategy:
+      matrix:
+        Python37:
+          python.version: '3.7'
+      maxParallel: 3
 
-  steps:
-  - task: UsePythonVersion@0
-    displayName: 'Use Python $(python.version)'
-    inputs:
-      versionSpec: '$(python.version)'
-      architecture: 'x64'
+    steps:
+    - task: UsePythonVersion@0
+      displayName: 'Use Python $(python.version)'
+      inputs:
+        versionSpec: '$(python.version)'
+        architecture: 'x64'
 
-  - script: pip install tox
-    displayName: 'Install tox'
+    - script: pip install tox
+      displayName: 'Install tox'
 
-  - script: tox -e unittests_core
-    displayName: 'Run unittests_core'
+    - script: tox -e unittests_core
+      displayName: 'Run unittests_core'
 
-  - script: tox -e unittests_ui
-    displayName: 'Run unittests_ui'
+    - script: tox -e unittests_ui
+      displayName: 'Run unittests_ui'
 
-  - script: tox -e systemtests_core
-    displayName: 'Run systemtests_core'
+    - script: tox -e systemtests_core
+      displayName: 'Run systemtests_core'
 
-  - script: tox -e systemtests_ui
-    displayName: 'Run systemtests_ui'
+    - script: tox -e systemtests_ui
+      displayName: 'Run systemtests_ui'
+
+
+  - job: 'test_vs2017_win2016'
+    pool:
+      vmImage: 'vs2017-win2016'
+    strategy:
+      matrix:
+        Python37:
+          python.version: '3.7'
+      maxParallel: 3
+
+    steps:
+    - task: UsePythonVersion@0
+      displayName: 'Use Python $(python.version)'
+      inputs:
+        versionSpec: '$(python.version)'
+        architecture: 'x64'
+
+    - script: pip install tox
+      displayName: 'Install tox'
+
+    - script: tox -e unittests_core
+      displayName: 'Run unittests_core'
+
+    - script: tox -e unittests_ui
+      displayName: 'Run unittests_ui'
+
+    - script: tox -e systemtests_core
+      displayName: 'Run systemtests_core'
+
+    - script: tox -e systemtests_ui
+      displayName: 'Run systemtests_ui'
+
+
+- stage: lint
+  displayName: Linting
+  dependsOn: [] # by specifying an empty array, this stage doesn't depend on the stage before it
+
+  jobs:
+
+  - job: 'flake8'
+    pool:
+      vmImage: 'ubuntu-16.04'
+    strategy:
+      matrix:
+        Python37:
+          python.version: '3.7'
+      maxParallel: 3
+
+    steps:
+    - task: UsePythonVersion@0
+      displayName: 'Use Python $(python.version)'
+      inputs:
+        versionSpec: '$(python.version)'
+        architecture: 'x64'
+
+    - script: pip install tox
+      displayName: 'Install tox'
+
+    - script: tox -e flake8
+      displayName: 'Run flake8'
+
+
+  - job: 'pylint'
+    pool:
+      vmImage: 'ubuntu-16.04'
+    strategy:
+      matrix:
+        Python37:
+          python.version: '3.7'
+      maxParallel: 3
+
+    steps:
+      - task: UsePythonVersion@0
+        displayName: 'Use Python $(python.version)'
+        inputs:
+          versionSpec: '$(python.version)'
+          architecture: 'x64'
+
+      - script: pip install tox
+        displayName: 'Install tox'
+
+      - script: tox -e pylint
+        displayName: 'Run pylint'

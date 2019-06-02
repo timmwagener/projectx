@@ -96,9 +96,9 @@ matrix:
         - PATH=/c/Python37:/c/Python37/Scripts:$PATH
         - TOX_ENV=systemtests_ui
 
-    allow_failures:
-      - name: "xenial-37-unittests_ui"
-      - name: "xenial-37-systemtests_ui"
+#    allow_failures:
+#      - name: "xenial-37-unittests_ui"
+#      - name: "xenial-37-systemtests_ui"
 
 install:
   - pip3 install tox

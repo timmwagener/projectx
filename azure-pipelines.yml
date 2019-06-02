@@ -162,9 +162,61 @@ stages:
         displayName: 'Run pylint'
 
 
+- stage: docs
+  displayName: Documentation
+  dependsOn: [test, ]
+
+  jobs:
+
+  - job: 'docs'
+    pool:
+      vmImage: 'vs2017-win2016'
+    strategy:
+      matrix:
+        Python37:
+          python.version: '3.7'
+      maxParallel: 3
+
+    steps:
+    - task: UsePythonVersion@0
+      displayName: 'Use Python $(python.version)'
+      inputs:
+        versionSpec: '$(python.version)'
+        architecture: 'x64'
+
+    - script: pip install tox
+      displayName: 'Install tox'
+
+    - script: tox -e apidocs
+      displayName: 'Run apidocs'
+
+    - script: tox -e docs
+      displayName: 'Run docs'
+
+      # Archive Files
+      # Compress files into .7z, .tar.gz, or .zip.
+    - task: ArchiveFiles@2
+      displayName: 'Archive docs'
+      inputs:
+        rootFolderOrFile: '$(Build.SourcesDirectory)/docs/build/html/'
+        includeRootFolder: false
+        archiveType: 'zip' # Options: zip, 7z, tar, wim
+        tarCompression: none
+        archiveFile: '$(Build.ArtifactStagingDirectory)/docs.zip'
+        replaceExistingArchive: true
+        verbose: true
+#        quiet: # Optional
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish docs'
+      inputs:
+        pathtoPublish: $(Build.ArtifactStagingDirectory)
+        artifactName: docs
+
+
 - stage: build
   displayName: Building
-  dependsOn: [test, ]
+  dependsOn: [test, docs, ]
 
   jobs:
 
@@ -183,6 +235,24 @@ stages:
       inputs:
         versionSpec: '$(python.version)'
         architecture: 'x64'
+
+    - task: DownloadBuildArtifacts@0
+      displayName: 'Download docs'
+      inputs:
+        buildType: 'current'
+        downloadType: 'single'
+        artifactName: docs
+        itemPattern: '**'
+        downloadPath: '$(System.ArtifactsDirectory)'
+
+    # Extract Files
+    # Extract a variety of archive and compression files such as .7z, .rar, .tar.gz, and .zip.
+    - task: ExtractFiles@1
+      displayName: 'Extract docs'
+      inputs:
+        archiveFilePatterns: '*.zip'
+        destinationFolder: '$(Build.SourcesDirectory)/docs/build/html/'
+        #cleanDestinationFolder: true
 
     - script: pip install tox
       displayName: 'Install tox'

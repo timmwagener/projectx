@@ -1,11 +1,34 @@
 
 
 jobs:
+- job: 'test-ubuntu-16.04'
+  pool:
+    vmImage: 'ubuntu-16.04'
+  strategy:
+    matrix:
+      Python37:
+        python.version: '3.7'
+    maxParallel: 1
 
-  - job: 'test-ubuntu-16.04'
+  steps:
 
+    - task: UsePythonVersion@0
+      displayName: 'Use Python $(python.version)'
+      inputs:
+        versionSpec: '$(python.version)'
+
+    - script: pip install tox
+      displayName: 'Install tox'
+
+    - script: tox -e unittests_core
+      displayName: 'Run unittests_core'
+
+    - script: tox -e unittests_ui
+      displayName: 'Run unittests_ui'
+
+- job: 'test-macOS-10.13'
     pool:
-      vmImage: 'ubuntu-16.04'
+      vmImage: 'macOS-10.13'
     strategy:
       matrix:
         Python37:
@@ -28,54 +51,27 @@ jobs:
       - script: tox -e unittests_ui
         displayName: 'Run unittests_ui'
 
-  - job: 'test-macOS-10.13'
+- job: 'test-vs2017-win2016'
+    pool:
+      vmImage: 'vs2017-win2016'
+    strategy:
+      matrix:
+        Python37:
+          python.version: '3.7'
+      maxParallel: 1
 
-      pool:
-        vmImage: 'macOS-10.13'
-      strategy:
-        matrix:
-          Python37:
-            python.version: '3.7'
-        maxParallel: 1
+    steps:
 
-      steps:
+      - task: UsePythonVersion@0
+        displayName: 'Use Python $(python.version)'
+        inputs:
+          versionSpec: '$(python.version)'
 
-        - task: UsePythonVersion@0
-          displayName: 'Use Python $(python.version)'
-          inputs:
-            versionSpec: '$(python.version)'
+      - script: pip install tox
+        displayName: 'Install tox'
 
-        - script: pip install tox
-          displayName: 'Install tox'
+      - script: tox -e unittests_core
+        displayName: 'Run unittests_core'
 
-        - script: tox -e unittests_core
-          displayName: 'Run unittests_core'
-
-        - script: tox -e unittests_ui
-          displayName: 'Run unittests_ui'
-
-  - job: 'test-vs2017-win2016'
-
-      pool:
-        vmImage: 'vs2017-win2016'
-      strategy:
-        matrix:
-          Python37:
-            python.version: '3.7'
-        maxParallel: 1
-
-      steps:
-
-        - task: UsePythonVersion@0
-          displayName: 'Use Python $(python.version)'
-          inputs:
-            versionSpec: '$(python.version)'
-
-        - script: pip install tox
-          displayName: 'Install tox'
-
-        - script: tox -e unittests_core
-          displayName: 'Run unittests_core'
-
-        - script: tox -e unittests_ui
-          displayName: 'Run unittests_ui'
+      - script: tox -e unittests_ui
+        displayName: 'Run unittests_ui'

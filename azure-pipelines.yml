@@ -1,6 +1,8 @@
 
 
 name: $(Date:yyyyMMdd)$(Rev:.r)
+trigger: none # will disable CI builds (but not PR builds)
+# pull requests to every branch will trigger the CI
 
 
 stages:
@@ -34,12 +36,14 @@ stages:
 
     - script: tox -e unittests_ui
       displayName: 'Run unittests_ui'
+      continueOnError: true  # temporarily fails gracefully on issue of linux with pyside2
 
     - script: tox -e systemtests_core
       displayName: 'Run systemtests_core'
 
     - script: tox -e systemtests_ui
       displayName: 'Run systemtests_ui'
+      continueOnError: true  # temporarily fails gracefully on issue of linux with pyside2
 
 
   - job: 'test_macOS_10_13'

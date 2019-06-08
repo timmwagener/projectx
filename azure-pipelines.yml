@@ -192,7 +192,7 @@ stages:
 
 - stage: docs
   displayName: Documentation
-  dependsOn: [test, ]
+#  dependsOn: [test, ]
 
   jobs:
 
@@ -221,6 +221,9 @@ stages:
     - script: tox -e docs
       displayName: 'Run docs'
 
+    - bash: 'ls -al $(Build.ArtifactStagingDirectory)'
+      displayName: 'ls -al $(Build.ArtifactStagingDirectory)'
+
     # Archive Files
     # Compress files into .7z, .tar.gz, or .zip.
     - task: ArchiveFiles@2
@@ -234,10 +237,12 @@ stages:
         replaceExistingArchive: true
         verbose: true
 
+    - bash: 'ls -al $(Build.ArtifactStagingDirectory)'
+      displayName: 'ls -al $(Build.ArtifactStagingDirectory)'
+
     - task: PublishBuildArtifacts@1
       displayName: 'Publish docs'
       inputs:
-        pathtoPublish: $(Build.ArtifactStagingDirectory)
         artifactName: docs
 
 
@@ -263,6 +268,9 @@ stages:
         versionSpec: '$(python.version)'
         architecture: 'x64'
 
+    - bash: 'ls -al $(Build.ArtifactStagingDirectory)'
+      displayName: 'ls -al $(Build.ArtifactStagingDirectory)'
+
     - task: DownloadBuildArtifacts@0
       displayName: 'Download docs'
       inputs:
@@ -270,14 +278,17 @@ stages:
         downloadType: 'single'
         artifactName: docs
         itemPattern: '**'
-        downloadPath: '$(System.ArtifactsDirectory)'
+        downloadPath: '$(Build.ArtifactStagingDirectory)'
+
+    - bash: 'ls -al $(Build.ArtifactStagingDirectory)'
+      displayName: 'ls -al $(Build.ArtifactStagingDirectory)'
 
     # Extract Files
     # Extract a variety of archive and compression files such as .7z, .rar, .tar.gz, and .zip.
     - task: ExtractFiles@1
       displayName: 'Extract docs'
       inputs:
-        archiveFilePatterns: '*.zip'
+        archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/docs.zip'
         destinationFolder: '$(Build.SourcesDirectory)/docs/build/html/'
         #cleanDestinationFolder: true
 
@@ -286,6 +297,9 @@ stages:
 
     - script: tox -e exe
       displayName: 'Run exe'
+
+    - bash: 'ls -al $(Build.ArtifactStagingDirectory)'
+      displayName: 'ls -al $(Build.ArtifactStagingDirectory)'
 
     # Archive Files
     # Compress files into .7z, .tar.gz, or .zip.
@@ -300,8 +314,10 @@ stages:
         replaceExistingArchive: true
         verbose: true
 
+    - bash: 'ls -al $(Build.ArtifactStagingDirectory)'
+      displayName: 'ls -al $(Build.ArtifactStagingDirectory)'
+
     - task: PublishBuildArtifacts@1
       displayName: 'Publish exe'
       inputs:
-        pathtoPublish: $(Build.ArtifactStagingDirectory)
         artifactName: exe

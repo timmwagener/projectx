@@ -19,70 +19,70 @@ stages:
 
   jobs:
 
-  - job: 'test_ubuntu_16_04'
-    pool:
-      vmImage: 'ubuntu-16.04'
-    strategy:
-      matrix:
-        Python37:
-          python.version: '3.7'
-      maxParallel: 3
+#  - job: 'test_ubuntu_16_04'
+#    pool:
+#      vmImage: 'ubuntu-16.04'
+#    strategy:
+#      matrix:
+#        Python37:
+#          python.version: '3.7'
+#      maxParallel: 3
+#
+#    steps:
+#    - task: UsePythonVersion@0
+#      displayName: 'Use Python $(python.version)'
+#      inputs:
+#        versionSpec: '$(python.version)'
+#        architecture: 'x64'
+#
+#    - script: pip install tox
+#      displayName: 'Install tox'
+#
+#    - script: tox -e unittests_core
+#      displayName: 'Run unittests_core'
+#
+#    - script: tox -e unittests_ui
+#      displayName: 'Run unittests_ui'
+#      continueOnError: true  # temporarily fails gracefully on issue of linux with pyside2
+#
+#    - script: tox -e systemtests_core
+#      displayName: 'Run systemtests_core'
+#
+#    - script: tox -e systemtests_ui
+#      displayName: 'Run systemtests_ui'
+#      continueOnError: true  # temporarily fails gracefully on issue of linux with pyside2
 
-    steps:
-    - task: UsePythonVersion@0
-      displayName: 'Use Python $(python.version)'
-      inputs:
-        versionSpec: '$(python.version)'
-        architecture: 'x64'
 
-    - script: pip install tox
-      displayName: 'Install tox'
-
-    - script: tox -e unittests_core
-      displayName: 'Run unittests_core'
-
-    - script: tox -e unittests_ui
-      displayName: 'Run unittests_ui'
-      continueOnError: true  # temporarily fails gracefully on issue of linux with pyside2
-
-    - script: tox -e systemtests_core
-      displayName: 'Run systemtests_core'
-
-    - script: tox -e systemtests_ui
-      displayName: 'Run systemtests_ui'
-      continueOnError: true  # temporarily fails gracefully on issue of linux with pyside2
-
-
-  - job: 'test_macOS_10_13'
-    pool:
-      vmImage: 'macOS-10.13'
-    strategy:
-      matrix:
-        Python37:
-          python.version: '3.7'
-      maxParallel: 3
-
-    steps:
-    - task: UsePythonVersion@0
-      displayName: 'Use Python $(python.version)'
-      inputs:
-        versionSpec: '$(python.version)'
-        architecture: 'x64'
-
-    - script: pip install tox
-      displayName: 'Install tox'
-
-    - script: tox -e unittests_core
-      displayName: 'Run unittests_core'
-
-    - script: tox -e unittests_ui
-      displayName: 'Run unittests_ui'
-
-    - script: tox -e systemtests_core
-      displayName: 'Run systemtests_core'
-
-    - script: tox -e systemtests_ui
-      displayName: 'Run systemtests_ui'
+#  - job: 'test_macOS_10_14'
+#    pool:
+#      vmImage: 'macOS-10.14'
+#    strategy:
+#      matrix:
+#        Python37:
+#          python.version: '3.7'
+#      maxParallel: 3
+#
+#    steps:
+#    - task: UsePythonVersion@0
+#      displayName: 'Use Python $(python.version)'
+#      inputs:
+#        versionSpec: '$(python.version)'
+#        architecture: 'x64'
+#
+#    - script: pip install tox
+#      displayName: 'Install tox'
+#
+#    - script: tox -e unittests_core
+#      displayName: 'Run unittests_core'
+#
+#    - script: tox -e unittests_ui
+#      displayName: 'Run unittests_ui'
+#
+#    - script: tox -e systemtests_core
+#      displayName: 'Run systemtests_core'
+#
+#    - script: tox -e systemtests_ui
+#      displayName: 'Run systemtests_ui'
 
 
   - job: 'test_vs2017_win2016'
@@ -95,6 +95,8 @@ stages:
       maxParallel: 3
 
     steps:
+
+    # this task installs Python at a specific version
     - task: UsePythonVersion@0
       displayName: 'Use Python $(python.version)'
       inputs:
@@ -115,6 +117,12 @@ stages:
 
     - script: tox -e systemtests_ui
       displayName: 'Run systemtests_ui'
+
+    - task: PublishCodeCoverageResults@1
+      inputs:
+        codeCoverageTool: Cobertura
+        summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.xml'
+        reportDirectory: '$(System.DefaultWorkingDirectory)/**/htmlcov'
 
 
 - stage: lint

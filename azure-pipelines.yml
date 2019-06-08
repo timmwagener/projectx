@@ -281,18 +281,22 @@ stages:
         downloadType: 'single'
         artifactName: docs
         itemPattern: '**'
-        downloadPath: '$(Build.ArtifactStagingDirectory)'
+        downloadPath: '$(Agent.TempDirectory)'
 
     - bash: 'ls -al'
       workingDirectory: '$(Build.ArtifactStagingDirectory)'
       displayName: 'ls -al $(Build.ArtifactStagingDirectory)'
+
+    - bash: 'ls -al'
+      workingDirectory: '$(Agent.TempDirectory)'
+      displayName: 'ls -al $(Agent.TempDirectory)'
 
     # Extract Files
     # Extract a variety of archive and compression files such as .7z, .rar, .tar.gz, and .zip.
     - task: ExtractFiles@1
       displayName: 'Extract docs'
       inputs:
-        archiveFilePatterns: '$(Build.ArtifactStagingDirectory)/docs.zip'
+        archiveFilePatterns: '$(Agent.TempDirectory)/docs/docs.zip'
         destinationFolder: '$(Build.SourcesDirectory)/docs/build/html/'
         #cleanDestinationFolder: true
 

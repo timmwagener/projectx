@@ -225,22 +225,31 @@ stages:
       workingDirectory: '$(Build.ArtifactStagingDirectory)'
       displayName: 'ls -al $(Build.ArtifactStagingDirectory)'
 
-    # Archive Files
-    # Compress files into .7z, .tar.gz, or .zip.
-    - task: ArchiveFiles@2
-      displayName: 'Archive docs'
-      inputs:
-        rootFolderOrFile: '$(Build.SourcesDirectory)/docs/build/html/'
-        includeRootFolder: false
-        archiveType: 'zip' # Options: zip, 7z, tar, wim
-        tarCompression: none
-        archiveFile: '$(Build.ArtifactStagingDirectory)/docs.zip'
-        replaceExistingArchive: true
-        verbose: true
+#    # Archive Files
+#    # Compress files into .7z, .tar.gz, or .zip.
+#    - task: ArchiveFiles@2
+#      displayName: 'Archive docs'
+#      inputs:
+#        rootFolderOrFile: '$(Build.SourcesDirectory)/docs/build/html/'
+#        includeRootFolder: false
+#        archiveType: 'zip' # Options: zip, 7z, tar, wim
+#        tarCompression: none
+#        archiveFile: '$(Build.ArtifactStagingDirectory)/docs.zip'
+#        replaceExistingArchive: true
+#        verbose: true
 
     - bash: 'ls -al'
       workingDirectory: '$(Build.ArtifactStagingDirectory)'
       displayName: 'ls -al $(Build.ArtifactStagingDirectory)'
+
+    - task: CopyFiles@2
+      inputs:
+        sourceFolder: '$(Build.SourcesDirectory)/docs/build/'
+        contents: '**\*'
+        targetFolder: '$(Build.ArtifactStagingDirectory)'
+        #cleanTargetFolder: false # Optional
+        #overWrite: false # Optional
+        #flattenFolders: false # Optional
 
     - task: PublishBuildArtifacts@1
       displayName: 'Publish docs'
@@ -291,14 +300,14 @@ stages:
       workingDirectory: '$(Agent.TempDirectory)'
       displayName: 'ls -al $(Agent.TempDirectory)'
 
-    # Extract Files
-    # Extract a variety of archive and compression files such as .7z, .rar, .tar.gz, and .zip.
-    - task: ExtractFiles@1
-      displayName: 'Extract docs'
-      inputs:
-        archiveFilePatterns: '$(Agent.TempDirectory)/docs/docs.zip'
-        destinationFolder: '$(Build.SourcesDirectory)/docs/build/html/'
-        #cleanDestinationFolder: true
+#    # Extract Files
+#    # Extract a variety of archive and compression files such as .7z, .rar, .tar.gz, and .zip.
+#    - task: ExtractFiles@1
+#      displayName: 'Extract docs'
+#      inputs:
+#        archiveFilePatterns: '$(Agent.TempDirectory)/docs/docs.zip'
+#        destinationFolder: '$(Build.SourcesDirectory)/docs/build/html/'
+#        #cleanDestinationFolder: true
 
     - script: pip install tox
       displayName: 'Install tox'
@@ -310,24 +319,34 @@ stages:
       workingDirectory: '$(Build.ArtifactStagingDirectory)'
       displayName: 'ls -al $(Build.ArtifactStagingDirectory)'
 
-    # Archive Files
-    # Compress files into .7z, .tar.gz, or .zip.
-    - task: ArchiveFiles@2
-      displayName: 'Archive exe'
-      inputs:
-        rootFolderOrFile: '$(Build.SourcesDirectory)/dist/'
-        includeRootFolder: false
-        archiveType: 'zip' # Options: zip, 7z, tar, wim
-        tarCompression: none
-        archiveFile: '$(Build.ArtifactStagingDirectory)/exe.zip'
-        replaceExistingArchive: true
-        verbose: true
+#    # Archive Files
+#    # Compress files into .7z, .tar.gz, or .zip.
+#    - task: ArchiveFiles@2
+#      displayName: 'Archive exe'
+#      inputs:
+#        rootFolderOrFile: '$(Build.SourcesDirectory)/dist/'
+#        includeRootFolder: false
+#        archiveType: 'zip' # Options: zip, 7z, tar, wim
+#        tarCompression: none
+#        archiveFile: '$(Build.ArtifactStagingDirectory)/exe.zip'
+#        replaceExistingArchive: true
+#        verbose: true
 
     - bash: 'ls -al'
       workingDirectory: '$(Build.ArtifactStagingDirectory)'
       displayName: 'ls -al $(Build.ArtifactStagingDirectory)'
 
+    - task: CopyFiles@2
+        inputs:
+          sourceFolder: '$(Build.SourcesDirectory)/docs/build/'
+          contents: '**\*'
+          targetFolder: '$(Build.ArtifactStagingDirectory)'
+          #cleanTargetFolder: false # Optional
+          #overWrite: false # Optional
+          #flattenFolders: false # Optional
+
     - task: PublishBuildArtifacts@1
       displayName: 'Publish exe'
       inputs:
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)'
         artifactName: exe

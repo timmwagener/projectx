@@ -26,70 +26,70 @@ stages:
 
   jobs:
 
-#  - job: 'test_ubuntu_16_04'
-#    pool:
-#      vmImage: 'ubuntu-16.04'
-#    strategy:
-#      matrix:
-#        Python37:
-#          python.version: '3.7'
-#      maxParallel: 3
-#
-#    steps:
-#    - task: UsePythonVersion@0
-#      displayName: 'Use Python $(python.version)'
-#      inputs:
-#        versionSpec: '$(python.version)'
-#        architecture: 'x64'
-#
-#    - script: pip install tox
-#      displayName: 'Install tox'
-#
-#    - script: tox -e unittests_core
-#      displayName: 'Run unittests_core'
-#
-#    - script: tox -e unittests_ui
-#      displayName: 'Run unittests_ui'
-#      continueOnError: true  # temporarily fails gracefully on issue of linux with pyside2
-#
-#    - script: tox -e systemtests_core
-#      displayName: 'Run systemtests_core'
-#
-#    - script: tox -e systemtests_ui
-#      displayName: 'Run systemtests_ui'
-#      continueOnError: true  # temporarily fails gracefully on issue of linux with pyside2
+  - job: 'test_ubuntu_16_04'
+    pool:
+      vmImage: 'ubuntu-16.04'
+    strategy:
+      matrix:
+        Python37:
+          python.version: '3.7'
+      maxParallel: 3
+
+    steps:
+    - task: UsePythonVersion@0
+      displayName: 'Use Python $(python.version)'
+      inputs:
+        versionSpec: '$(python.version)'
+        architecture: 'x64'
+
+    - script: pip install tox
+      displayName: 'Install tox'
+
+    - script: tox -e unittests_core
+      displayName: 'Run unittests_core'
+
+    - script: tox -e unittests_ui
+      displayName: 'Run unittests_ui'
+      continueOnError: true  # temporarily fails gracefully on issue of linux with pyside2
+
+    - script: tox -e systemtests_core
+      displayName: 'Run systemtests_core'
+
+    - script: tox -e systemtests_ui
+      displayName: 'Run systemtests_ui'
+      continueOnError: true  # temporarily fails gracefully on issue of linux with pyside2
 
 
-#  - job: 'test_macOS_10_14'
-#    pool:
-#      vmImage: 'macOS-10.14'
-#    strategy:
-#      matrix:
-#        Python37:
-#          python.version: '3.7'
-#      maxParallel: 3
-#
-#    steps:
-#    - task: UsePythonVersion@0
-#      displayName: 'Use Python $(python.version)'
-#      inputs:
-#        versionSpec: '$(python.version)'
-#        architecture: 'x64'
-#
-#    - script: pip install tox
-#      displayName: 'Install tox'
-#
-#    - script: tox -e unittests_core
-#      displayName: 'Run unittests_core'
-#
-#    - script: tox -e unittests_ui
-#      displayName: 'Run unittests_ui'
-#
-#    - script: tox -e systemtests_core
-#      displayName: 'Run systemtests_core'
-#
-#    - script: tox -e systemtests_ui
-#      displayName: 'Run systemtests_ui'
+  - job: 'test_macOS_10_14'
+    pool:
+      vmImage: 'macOS-10.14'
+    strategy:
+      matrix:
+        Python37:
+          python.version: '3.7'
+      maxParallel: 3
+
+    steps:
+    - task: UsePythonVersion@0
+      displayName: 'Use Python $(python.version)'
+      inputs:
+        versionSpec: '$(python.version)'
+        architecture: 'x64'
+
+    - script: pip install tox
+      displayName: 'Install tox'
+
+    - script: tox -e unittests_core
+      displayName: 'Run unittests_core'
+
+    - script: tox -e unittests_ui
+      displayName: 'Run unittests_ui'
+
+    - script: tox -e systemtests_core
+      displayName: 'Run systemtests_core'
+
+    - script: tox -e systemtests_ui
+      displayName: 'Run systemtests_ui'
 
 
   - job: 'test_vs2017_win2016'
@@ -116,25 +116,25 @@ stages:
     - script: tox -e unittests_core
       displayName: 'Run unittests_core'
 
-#    - script: tox -e unittests_ui
-#      displayName: 'Run unittests_ui'
-#
-#    - script: tox -e systemtests_core
-#      displayName: 'Run systemtests_core'
-#
-#    - script: tox -e systemtests_ui
-#      displayName: 'Run systemtests_ui'
+    - script: tox -e unittests_ui
+      displayName: 'Run unittests_ui'
+
+    - script: tox -e systemtests_core
+      displayName: 'Run systemtests_core'
+
+    - script: tox -e systemtests_ui
+      displayName: 'Run systemtests_ui'
 
     - task: PublishCodeCoverageResults@1
       inputs:
         codeCoverageTool: Cobertura
-        summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.xml'
-        reportDirectory: '$(System.DefaultWorkingDirectory)/**/htmlcov'
+        summaryFileLocation: '$(Build.SourcesDirectory)/coverage.xml'
+        reportDirectory: '$(Build.SourcesDirectory)/htmlcov'
 
     - task: PublishTestResults@2
       condition: succeededOrFailed()
       inputs:
-        testResultsFiles: '$(System.DefaultWorkingDirectory)/junit/test-report-*.xml'
+        testResultsFiles: '$(Build.SourcesDirectory)/junit/test-report-*.xml'
         testRunTitle: 'Publish test results for Python $(python.version)'
 
 
@@ -192,7 +192,7 @@ stages:
 
 - stage: docs
   displayName: Documentation
-#  dependsOn: [test, ]
+  dependsOn: [test, ]
 
   jobs:
 
@@ -221,27 +221,6 @@ stages:
     - script: tox -e docs
       displayName: 'Run docs'
 
-    - bash: 'ls -al'
-      workingDirectory: '$(Build.ArtifactStagingDirectory)'
-      displayName: 'ls -al $(Build.ArtifactStagingDirectory)'
-
-#    # Archive Files
-#    # Compress files into .7z, .tar.gz, or .zip.
-#    - task: ArchiveFiles@2
-#      displayName: 'Archive docs'
-#      inputs:
-#        rootFolderOrFile: '$(Build.SourcesDirectory)/docs/build/html/'
-#        includeRootFolder: false
-#        archiveType: 'zip' # Options: zip, 7z, tar, wim
-#        tarCompression: none
-#        archiveFile: '$(Build.ArtifactStagingDirectory)/docs.zip'
-#        replaceExistingArchive: true
-#        verbose: true
-
-    - bash: 'ls -al'
-      workingDirectory: '$(Build.ArtifactStagingDirectory)'
-      displayName: 'ls -al $(Build.ArtifactStagingDirectory)'
-
     - task: CopyFiles@2
       inputs:
         sourceFolder: '$(Build.SourcesDirectory)/docs/build/'
@@ -254,6 +233,7 @@ stages:
     - task: PublishBuildArtifacts@1
       displayName: 'Publish docs'
       inputs:
+        pathtoPublish: '$(Build.ArtifactStagingDirectory)'
         artifactName: docs
 
 
@@ -279,10 +259,6 @@ stages:
         versionSpec: '$(python.version)'
         architecture: 'x64'
 
-    - bash: 'ls -al'
-      workingDirectory: '$(Build.ArtifactStagingDirectory)'
-      displayName: 'ls -al $(Build.ArtifactStagingDirectory)'
-
     - task: DownloadBuildArtifacts@0
       displayName: 'Download docs'
       inputs:
@@ -291,14 +267,6 @@ stages:
         artifactName: docs
         itemPattern: '**'
         downloadPath: '$(Agent.TempDirectory)'
-
-    - bash: 'ls -al'
-      workingDirectory: '$(Build.ArtifactStagingDirectory)'
-      displayName: 'ls -al $(Build.ArtifactStagingDirectory)'
-
-    - bash: 'ls -al'
-      workingDirectory: '$(Agent.TempDirectory)'
-      displayName: 'ls -al $(Agent.TempDirectory)'
 
     - task: CopyFiles@2
       inputs:
@@ -309,41 +277,11 @@ stages:
         #overWrite: false # Optional
         #flattenFolders: false # Optional
 
-#    # Extract Files
-#    # Extract a variety of archive and compression files such as .7z, .rar, .tar.gz, and .zip.
-#    - task: ExtractFiles@1
-#      displayName: 'Extract docs'
-#      inputs:
-#        archiveFilePatterns: '$(Agent.TempDirectory)/docs/docs.zip'
-#        destinationFolder: '$(Build.SourcesDirectory)/docs/build/html/'
-#        #cleanDestinationFolder: true
-
     - script: pip install tox
       displayName: 'Install tox'
 
     - script: tox -e exe
       displayName: 'Run exe'
-
-    - bash: 'ls -al'
-      workingDirectory: '$(Build.ArtifactStagingDirectory)'
-      displayName: 'ls -al $(Build.ArtifactStagingDirectory)'
-
-#    # Archive Files
-#    # Compress files into .7z, .tar.gz, or .zip.
-#    - task: ArchiveFiles@2
-#      displayName: 'Archive exe'
-#      inputs:
-#        rootFolderOrFile: '$(Build.SourcesDirectory)/dist/'
-#        includeRootFolder: false
-#        archiveType: 'zip' # Options: zip, 7z, tar, wim
-#        tarCompression: none
-#        archiveFile: '$(Build.ArtifactStagingDirectory)/exe.zip'
-#        replaceExistingArchive: true
-#        verbose: true
-
-    - bash: 'ls -al'
-      workingDirectory: '$(Build.ArtifactStagingDirectory)'
-      displayName: 'ls -al $(Build.ArtifactStagingDirectory)'
 
     - task: CopyFiles@2
       inputs:
@@ -353,10 +291,6 @@ stages:
         #cleanTargetFolder: false # Optional
         #overWrite: false # Optional
         #flattenFolders: false # Optional
-
-    - bash: 'ls -al'
-      workingDirectory: '$(Build.ArtifactStagingDirectory)'
-      displayName: 'ls -al $(Build.ArtifactStagingDirectory)'
 
     - task: PublishBuildArtifacts@1
       displayName: 'Publish exe'

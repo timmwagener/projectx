@@ -345,6 +345,19 @@ stages:
       workingDirectory: '$(Build.ArtifactStagingDirectory)'
       displayName: 'ls -al $(Build.ArtifactStagingDirectory)'
 
+    - task: CopyFiles@2
+      inputs:
+        sourceFolder: '$(Build.SourcesDirectory)/dist/'
+        contents: '**\*'
+        targetFolder: '$(Build.ArtifactStagingDirectory)'
+        #cleanTargetFolder: false # Optional
+        #overWrite: false # Optional
+        #flattenFolders: false # Optional
+
+    - bash: 'ls -al'
+      workingDirectory: '$(Build.ArtifactStagingDirectory)'
+      displayName: 'ls -al $(Build.ArtifactStagingDirectory)'
+
     - task: PublishBuildArtifacts@1
       displayName: 'Publish exe'
       inputs:

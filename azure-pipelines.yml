@@ -300,6 +300,15 @@ stages:
       workingDirectory: '$(Agent.TempDirectory)'
       displayName: 'ls -al $(Agent.TempDirectory)'
 
+    - task: CopyFiles@2
+      inputs:
+        sourceFolder: '$(Agent.TempDirectory)/docs/'
+        contents: '**\*'
+        targetFolder: '$(Build.SourcesDirectory)/docs/build/'
+        #cleanTargetFolder: false # Optional
+        #overWrite: false # Optional
+        #flattenFolders: false # Optional
+
 #    # Extract Files
 #    # Extract a variety of archive and compression files such as .7z, .rar, .tar.gz, and .zip.
 #    - task: ExtractFiles@1

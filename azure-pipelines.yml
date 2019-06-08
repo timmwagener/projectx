@@ -116,14 +116,14 @@ stages:
     - script: tox -e unittests_core
       displayName: 'Run unittests_core'
 
-    - script: tox -e unittests_ui
-      displayName: 'Run unittests_ui'
-
-    - script: tox -e systemtests_core
-      displayName: 'Run systemtests_core'
-
-    - script: tox -e systemtests_ui
-      displayName: 'Run systemtests_ui'
+#    - script: tox -e unittests_ui
+#      displayName: 'Run unittests_ui'
+#
+#    - script: tox -e systemtests_core
+#      displayName: 'Run systemtests_core'
+#
+#    - script: tox -e systemtests_ui
+#      displayName: 'Run systemtests_ui'
 
     - task: PublishCodeCoverageResults@1
       inputs:
@@ -221,7 +221,8 @@ stages:
     - script: tox -e docs
       displayName: 'Run docs'
 
-    - bash: 'ls -al $(Build.ArtifactStagingDirectory)'
+    - bash: 'ls -al'
+      workingDirectory: '$(Build.ArtifactStagingDirectory)'
       displayName: 'ls -al $(Build.ArtifactStagingDirectory)'
 
     # Archive Files
@@ -237,7 +238,8 @@ stages:
         replaceExistingArchive: true
         verbose: true
 
-    - bash: 'ls -al $(Build.ArtifactStagingDirectory)'
+    - bash: 'ls -al'
+      workingDirectory: '$(Build.ArtifactStagingDirectory)'
       displayName: 'ls -al $(Build.ArtifactStagingDirectory)'
 
     - task: PublishBuildArtifacts@1
@@ -268,7 +270,8 @@ stages:
         versionSpec: '$(python.version)'
         architecture: 'x64'
 
-    - bash: 'ls -al $(Build.ArtifactStagingDirectory)'
+    - bash: 'ls -al'
+      workingDirectory: '$(Build.ArtifactStagingDirectory)'
       displayName: 'ls -al $(Build.ArtifactStagingDirectory)'
 
     - task: DownloadBuildArtifacts@0
@@ -280,7 +283,8 @@ stages:
         itemPattern: '**'
         downloadPath: '$(Build.ArtifactStagingDirectory)'
 
-    - bash: 'ls -al $(Build.ArtifactStagingDirectory)'
+    - bash: 'ls -al'
+      workingDirectory: '$(Build.ArtifactStagingDirectory)'
       displayName: 'ls -al $(Build.ArtifactStagingDirectory)'
 
     # Extract Files
@@ -298,7 +302,8 @@ stages:
     - script: tox -e exe
       displayName: 'Run exe'
 
-    - bash: 'ls -al $(Build.ArtifactStagingDirectory)'
+    - bash: 'ls -al'
+      workingDirectory: '$(Build.ArtifactStagingDirectory)'
       displayName: 'ls -al $(Build.ArtifactStagingDirectory)'
 
     # Archive Files
@@ -314,7 +319,8 @@ stages:
         replaceExistingArchive: true
         verbose: true
 
-    - bash: 'ls -al $(Build.ArtifactStagingDirectory)'
+    - bash: 'ls -al'
+      workingDirectory: '$(Build.ArtifactStagingDirectory)'
       displayName: 'ls -al $(Build.ArtifactStagingDirectory)'
 
     - task: PublishBuildArtifacts@1

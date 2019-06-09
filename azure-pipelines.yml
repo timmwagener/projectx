@@ -37,7 +37,7 @@ stages:
       matrix:
         Python37:
           python.version: '3.7'
-      maxParallel: 3
+#      maxParallel: 3
 
     steps:
     - task: UsePythonVersion@0
@@ -71,7 +71,7 @@ stages:
       matrix:
         Python37:
           python.version: '3.7'
-      maxParallel: 3
+#      maxParallel: 3
 
     steps:
     - task: UsePythonVersion@0
@@ -103,7 +103,7 @@ stages:
       matrix:
         Python37:
           python.version: '3.7'
-      maxParallel: 3
+#      maxParallel: 3
 
     steps:
 
@@ -155,7 +155,7 @@ stages:
       matrix:
         Python37:
           python.version: '3.7'
-      maxParallel: 3
+#      maxParallel: 3
 
     steps:
     - task: UsePythonVersion@0
@@ -178,7 +178,7 @@ stages:
       matrix:
         Python37:
           python.version: '3.7'
-      maxParallel: 3
+#      maxParallel: 3
 
     steps:
       - task: UsePythonVersion@0
@@ -196,7 +196,7 @@ stages:
 
 - stage: docs
   displayName: Documentation
-  dependsOn: [test, ]
+#  dependsOn: [test, ]
 
   jobs:
 
@@ -207,7 +207,7 @@ stages:
       matrix:
         Python37:
           python.version: '3.7'
-      maxParallel: 3
+#      maxParallel: 3
 
     steps:
     - task: UsePythonVersion@0
@@ -254,7 +254,7 @@ stages:
       matrix:
         Python37:
           python.version: '3.7'
-      maxParallel: 3
+#      maxParallel: 3
 
     steps:
     - task: UsePythonVersion@0

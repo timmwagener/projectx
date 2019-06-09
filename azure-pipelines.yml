@@ -5,6 +5,10 @@ name: $(Date:yyyyMMdd)$(Rev:.r)
 # Will disable CI builds, but not PR builds when repository is on github or bitbucket.
 # This has no effect when the repository is hosted on azure repos. In this case
 # branch policies must be used and this setting should be commented or adjusted.
+
+# seeting branches as "include" avoids "double builds" because there will be
+# no builds for the branches of PRs. Builds for PR branches will be triggered
+# by branch policies that have been set in the web interface.
 trigger:
   branches:
     include:  # only run CI on pushes to these branches

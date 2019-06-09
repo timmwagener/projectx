@@ -5,11 +5,11 @@ name: $(Date:yyyyMMdd)$(Rev:.r)
 # Will disable CI builds, but not PR builds when repository is on github or bitbucket.
 # This has no effect when the repository is hosted on azure repos. In this case
 # branch policies must be used and this setting should be commented or adjusted.
-trigger:
-  branches:
-    include:  # only run CI on pushes to these branches
-    - develop
-    - master
+#trigger:  # run CI upon pushes to all branches when this is commented
+#  branches:
+#    include:  # only run CI on pushes to these branches
+#    - develop
+#    - master
 
 
 # TODO: Correct docs zipping
